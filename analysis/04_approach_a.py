@@ -6,6 +6,8 @@ For each keyword:
 
 β3 > 0 with β1 > 0 → broadening (both grow, young faster)
 β3 > 0 with β1 ≤ 0 → displacement (only young grows)
+β3 < 0 with β1 > 0 → maturation (both grow, traditional faster)
+β3 < 0 with β1 ≤ 0 → contraction (traditional declines, young declines faster)
 
 Uses Newey-West HAC SE (maxlags=12).
 Benjamini-Hochberg FDR correction across 6 keywords.
@@ -75,10 +77,12 @@ def fit_interaction_model(df_kw, keyword_name):
         results["pattern"] = "Broadening"
     elif results["beta1_time"] <= 0 and results["beta3_interaction"] > 0:
         results["pattern"] = "Displacement"
-    elif results["beta3_interaction"] <= 0:
-        results["pattern"] = "No youth acceleration"
+    elif results["beta1_time"] > 0 and results["beta3_interaction"] < 0:
+        results["pattern"] = "Maturation"
+    elif results["beta1_time"] <= 0 and results["beta3_interaction"] < 0:
+        results["pattern"] = "Contraction"
     else:
-        results["pattern"] = "Other"
+        results["pattern"] = "No differential"
 
     return results, model
 
