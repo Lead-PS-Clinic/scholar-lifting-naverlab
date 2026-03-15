@@ -56,6 +56,16 @@ KW_COLORS = {
     "리프팅시술": "#1ABC9C",
 }
 
+# English labels for figures (target journal is English-language)
+KW_ENGLISH = {
+    "실리프팅": "Thread lifting",
+    "울쎄라": "Ulthera (HIFU)",
+    "슈링크": "Shrink (HIFU)",
+    "써마지": "Thermage (RF)",
+    "인모드": "InMode (RF)",
+    "리프팅시술": "Lifting (generic)",
+}
+
 
 def load_data():
     raw = pd.read_csv(os.path.join(BASE_DIR, "data", "raw", "naver_rsv_all.csv"))
@@ -80,7 +90,8 @@ def figure1(raw, gt):
 
     for kw in KW_COLORS:
         d = naver_all[naver_all["keyword"] == kw].sort_values("period")
-        ax1.plot(d["period"], d["ratio"], color=KW_COLORS[kw], label=kw, alpha=0.8, linewidth=1.2)
+        ax1.plot(d["period"], d["ratio"], color=KW_COLORS[kw],
+                 label=KW_ENGLISH.get(kw, kw), alpha=0.8, linewidth=1.2)
 
     ax1.set_xlabel("Date")
     ax1.set_ylabel("Naver RSV (0-100)", color="black")
@@ -134,17 +145,19 @@ def figure2(props):
     ax.set_title("Figure 2. Age-Group Proportional Share of Non-Surgical Lifting Search Interest\n"
                  "(All Procedures Combined, Naver 2016–2025)", fontsize=11)
     ax.legend(loc="upper left", fontsize=10, framealpha=0.9)
-    ax.set_xlim(2016, 2025)
+    ax.set_xlim(2015.5, 2025.5)
     ax.set_ylim(0, 1)
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f'{y:.0%}'))
 
-    # Annotate YTR values
-    for year in [2016, 2020, 2025]:
+    # Annotate YTR values inside the Traditional (bottom) band
+    annotations = [(2016, "left"), (2020, "center"), (2025, "right")]
+    for year, ha in annotations:
         y_val = pivot.loc[year, "Young"]
         t_val = pivot.loc[year, "Traditional"]
         ytr = y_val / t_val if t_val > 0 else 0
-        ax.annotate(f"YTR={ytr:.2f}", xy=(year, 0.02),
-                    fontsize=8, ha="center", color="white", weight="bold")
+        x_offset = 0.3 if ha == "left" else (-0.3 if ha == "right" else 0)
+        ax.annotate(f"YTR={ytr:.2f}", xy=(year + x_offset, t_val / 2),
+                    fontsize=9, ha=ha, color="white", weight="bold")
 
     plt.tight_layout()
     path = os.path.join(FIG_DIR, "figure2_age_proportions_stacked.png")
@@ -168,7 +181,7 @@ def figure3(table2):
                     fmt="o", color=color, capsize=4, markersize=8, linewidth=2)
 
     ax.set_yticks(list(y_pos))
-    ax.set_yticklabels(table2_sorted["keyword"].values, fontsize=10)
+    ax.set_yticklabels([KW_ENGLISH.get(k, k) for k in table2_sorted["keyword"].values], fontsize=10)
     ax.axvline(x=0, color="black", linestyle="--", linewidth=0.8, alpha=0.5)
     ax.set_xlabel("β₃ (Time × Young Interaction Coefficient)", fontsize=11)
     ax.set_title("Figure 3. Age-Differential Growth Rate in Search Interest by Procedure\n"
@@ -241,7 +254,7 @@ def figure_exploratory_panels(grouped):
             dd = d[d["age_group"] == ag].sort_values("period")
             ax.plot(dd["period"], dd["mean_rsv"], color=COLORS[ag], label=ag, linewidth=1.2)
 
-        ax.set_title(kw, fontsize=11, fontweight="bold")
+        ax.set_title(KW_ENGLISH.get(kw, kw), fontsize=11, fontweight="bold")
         ax.set_ylim(0, None)
         if i == 0:
             ax.legend(fontsize=8)

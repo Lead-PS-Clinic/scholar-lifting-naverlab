@@ -132,7 +132,7 @@ The Young-to-Traditional Ratio (YTR = Proportion_Young / Proportion_Traditional)
 
 #### Sensitivity Analyses
 
-Two sensitivity analyses were conducted to assess robustness of the primary Approach A results. First, Prais-Winsten generalized least squares (GLS) estimation with iterative AR(1) correction was applied as an alternative to Newey-West HAC standard errors, to verify that findings were not driven by residual autocorrelation structure. Second, the seasonal dummy variables were replaced with Fourier terms (2 sine-cosine pairs at annual and semiannual frequencies) to confirm that seasonal adjustment specification did not influence the key β₃ estimates. Third, to address the primary threat of differential platform migration by age, we conducted a scenario-based sensitivity analysis in which Young (20–34) RSV values were inflated by correction factors of (1 + r)^(year − 2016), where r = 0.03, 0.05, or 0.07 (representing 3%, 5%, or 7% annual attrition of young users from Naver). The interaction model was re-fitted under each scenario to determine the attrition rate at which the maturation finding would reverse or become nonsignificant.
+Three sensitivity analyses were conducted to assess robustness of the primary Approach A results. First, Prais-Winsten generalized least squares (GLS) estimation with iterative AR(1) correction was applied as an alternative to Newey-West HAC standard errors, to verify that findings were not driven by residual autocorrelation structure. Second, the seasonal dummy variables were replaced with Fourier terms (2 sine-cosine pairs at annual and semiannual frequencies) to confirm that seasonal adjustment specification did not influence the key β₃ estimates. Third, to address the primary threat of differential platform migration by age, we conducted a scenario-based sensitivity analysis in which Young (20–34) RSV values were inflated by correction factors of (1 + r)^(year − 2016), where r = 0.03, 0.05, or 0.07 (representing 3%, 5%, or 7% annual attrition of young users from Naver). The interaction model was re-fitted under each scenario to determine the attrition rate at which the maturation finding would reverse or become nonsignificant.
 
 #### Additional Analyses
 
@@ -209,6 +209,10 @@ The Prais-Winsten GLS analysis confirmed the maturation finding for thread lifti
 
 In the platform migration sensitivity analysis, the maturation finding for thread lifting and generic lifting remained statistically significant even under the most extreme assumption of 7% annual attrition of young users from Naver (thread lifting: β₃ = −0.457, P_BH < .001; generic lifting: β₃ = −0.267, P_BH = .04). HIFU-value became nonsignificant at 5% attrition. No keyword showed significant youth acceleration under any attrition scenario up to 7% per year (Supplementary Table S1).
 
+#### Post-Hoc Power Analysis
+
+For the 3 nonsignificant keywords, the minimum detectable effect size (MDES) at 80% power ranged from 0.28 to 0.60, whereas their observed |β₃| values were only 0.047 to 0.055. Observed power was below 10% for all 3 nonsignificant keywords, indicating that the study was substantially underpowered to detect effects of this magnitude. Approximately 15,000 observations per keyword would be needed to detect the average nonsignificant effect size at 80% power, compared with the approximately 236 available (Supplementary Table S2).
+
 ### Gender Stratification
 
 The maturation pattern was present in both genders but was more pronounced among female searchers (Table 4). For thread lifting, the female β₃ was −0.652 (P_BH < .001) compared with the male β₃ of −0.161 (P_BH = .018) — a 4-fold difference in magnitude. For the generic lifting term, the female β₃ was −0.573 (P_BH < .001) compared with the male β₃ of −0.303 (P_BH = .002). The 3 keywords without significant overall maturation (Thermage, Ulthera, InMode) also showed no significant gender-specific patterns.
@@ -254,7 +258,7 @@ These findings align with the Diffusion of Innovations framework [7]. Young adul
 
 This reframes the prevailing narrative. The question is not whether non-surgical lifting "went younger" but whether the market followed a typical innovation diffusion curve in which early youth interest served as a leading indicator of subsequent mainstream adoption by the clinically indicated population. Our data support the latter interpretation.
 
-We acknowledge that the innovation diffusion framework applies most directly to procedures that were genuinely novel during the study period, such as Shrink (슈링크, launched approximately 2018) and InMode (Korean market entry approximately 2018). Established devices such as Thermage (2002) and Ulthera (2009) had already completed their initial diffusion cycle before 2016. Notably, these established brands showed nonsignificant β₃ — consistent with a stable, post-diffusion age composition — while the newer entrants and the category-level search term showed the strongest maturation signals. An alternative, complementary explanation is population aging: South Korea's rapid demographic aging may independently increase the pool of older consumers seeking skin-laxity treatments, contributing to the observed Traditional-demographic growth.
+We acknowledge that the innovation diffusion framework applies most directly to procedures that were genuinely novel during the study period, such as Shrink (슈링크, launched approximately 2018) and InMode (Korean market entry approximately 2018). Established devices such as Thermage (2002) and Ulthera (2009) had already completed their initial diffusion cycle before 2016. Notably, these established brands showed nonsignificant β₃ — consistent with a stable, post-diffusion age composition — while the newer entrants and the category-level search term showed the strongest maturation signals. An alternative, complementary explanation is population aging: South Korea's rapid demographic aging — among the fastest in the Organisation for Economic Co-operation and Development, with the proportion of the population aged 65 years or older rising from 13.2% in 2016 to 19.2% in 2025 [24] — may independently increase the pool of older consumers seeking skin-laxity treatments, contributing to the observed Traditional-demographic growth.
 
 ### Procedure-Specific Patterns
 
@@ -329,6 +333,7 @@ The raw Naver DataLab RSV dataset, Google Trends data, processed analytic datase
 21. Dhanda AK, Leverant A, Leshchuk K, et al. A Google Trends analysis of facial cosmetic surgery interest during the COVID-19 pandemic. *Aesthet Surg J*. 2022;42(4):NP237-NP244.
 22. Korea Internet & Security Agency. 2024 Internet Usage Survey. KISA; 2024.
 23. Wiseapp. Search engine app usage statistics by age group in South Korea. Wiseapp Report; 2024.
+24. Statistics Korea. Population Projections for Korea: 2020–2070. Statistics Korea; 2024.
 
 ---
 
@@ -348,14 +353,35 @@ Joinpoint regression of the mean Young-to-Traditional Ratio (YTR) across all key
 
 ---
 
+## Supplementary Materials
+
+**Supplementary Table S1.** Platform migration sensitivity analysis: β₃ (Time × Young) under simulated young-user attrition scenarios (3%, 5%, 7% annual Naver attrition).
+
+**Supplementary Table S2.** Post-hoc power analysis: minimum detectable effect size at 80% power, observed power, and required sample size for nonsignificant keywords.
+
+**Supplementary Table S3.** Prais-Winsten GLS sensitivity analysis: β₃ estimates with AR(1)-corrected standard errors.
+
+**Supplementary Table S4.** Fourier term sensitivity analysis: β₃ estimates with harmonic seasonal adjustment.
+
+**Supplementary Figure S1.** Young (20–34) vs Traditional (45+) RSV time series by individual procedure keyword (6-panel display).
+
+**Supplementary Figure S2.** Google Trends RSV for global prejuvenation-related search terms ("prejuvenation," "preventive botox," "baby botox"), 2016–2025.
+
+---
+
 ## Abbreviations
 
 API: application programming interface
+AR: autoregressive
 BIC: Bayesian information criterion
+DW: Durbin-Watson
 FDR: false discovery rate
+GLS: generalized least squares
 GT: Google Trends
 HAC: heteroscedasticity and autocorrelation consistent
 HIFU: high-intensity focused ultrasound
+MDES: minimum detectable effect size
+OLS: ordinary least squares
 RF: radiofrequency
 RSV: relative search volume
 STROBE: Strengthening the Reporting of Observational Studies in Epidemiology
