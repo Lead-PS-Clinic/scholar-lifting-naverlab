@@ -171,8 +171,8 @@ def figure3(table2):
     ax.set_yticklabels(table2_sorted["keyword"].values, fontsize=10)
     ax.axvline(x=0, color="black", linestyle="--", linewidth=0.8, alpha=0.5)
     ax.set_xlabel("β₃ (Time × Young Interaction Coefficient)", fontsize=11)
-    ax.set_title("Figure 3. Youth Acceleration in Search Interest by Procedure\n"
-                 "(β₃ > 0 indicates faster growth in Young 20–34 vs Traditional 45+)", fontsize=10)
+    ax.set_title("Figure 3. Age-Differential Growth Rate in Search Interest by Procedure\n"
+                 "(β₃ < 0 indicates faster growth in Traditional 45+ vs Young 20–34)", fontsize=10)
 
     # Legend
     from matplotlib.lines import Line2D
