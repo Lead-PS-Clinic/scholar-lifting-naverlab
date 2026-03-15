@@ -312,7 +312,7 @@ The raw Naver DataLab RSV dataset, Google Trends data, processed analytic datase
 
 ## References
 
-1. International Society of Aesthetic Plastic Surgery. ISAPS International Survey on Aesthetic/Cosmetic Procedures Performed in 2023. ISAPS; 2024.
+1. International Society of Aesthetic Plastic Surgery. ISAPS International Survey on Aesthetic/Cosmetic Procedures Performed in 2024. ISAPS; 2025.
 2. Kim HJ, Park JH. Non-surgical facial rejuvenation in Korea: current trends and devices. *Arch Aesthetic Plast Surg*. 2023;29(1):1-8.
 3. Fabi SG, Massaki A, Eimpunth S, Pogoda J, Goldman MP. Evaluation of microfocused ultrasound with visualization for lifting, tightening, and wrinkle reduction of the décolletage. *J Am Acad Dermatol*. 2013;69(6):965-971.
 4. American Society for Dermatologic Surgery. ASDS Consumer Survey on Cosmetic Dermatologic Procedures. ASDS; 2024.
