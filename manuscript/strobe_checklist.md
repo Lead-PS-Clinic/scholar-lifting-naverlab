@@ -34,7 +34,7 @@
 | 16 | (a) Give unadjusted estimates and, if applicable, confounder-adjusted estimates and their precision | Results, Tables 3–4 (β₃ with SE, 95% CI, P values); Model Diagnostics (DW, Ljung-Box Q) |
 | | (b) Report category boundaries when continuous variables were categorized | Methods, Age Group Definitions (Young 19–34, Middle 35–44, Traditional 45+) |
 | | (c) If relevant, consider translating estimates into meaningful clinical measures | Results, YTR interpretation ("young adults searched at 1.42 times the rate") |
-| 17 | Report other analyses done — e.g., analyses of subgroups and interactions, and sensitivity analyses | Results: Gender Stratification (Table 4); Joinpoint Analysis (annual + monthly sensitivity); Sensitivity Analyses (Prais-Winsten, Fourier, platform migration); Google Trends Triangulation |
+| 17 | Report other analyses done — e.g., analyses of subgroups and interactions, and sensitivity analyses | Results: Gender Stratification (Table 4); Joinpoint Analysis (annual + monthly sensitivity); Sensitivity Analyses (Prais-Winsten, Fourier, platform migration); Post-hoc Power Analysis; Google Trends Triangulation; Supplementary Tables S1–S4 |
 | **Discussion** | | |
 | 18 | Summarise key results with reference to study objectives | Discussion, Principal Findings |
 | 19 | Discuss limitations of the study, taking into account sources of potential bias or imprecision | Discussion, Limitations (7 limitations with platform migration as primary; sensitivity analysis results referenced) |
