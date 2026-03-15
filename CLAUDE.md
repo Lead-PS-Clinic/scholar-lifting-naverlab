@@ -261,7 +261,9 @@ GENDERS = [None, 'f', 'm']
 | Table 2 | β₃ interaction coefficients by keyword — "Maturation" pattern for 3/6 keywords | Primary result |
 | Table 3 | β₃ by gender — maturation effect stronger among female searchers | Gender stratification |
 
-Supplementary: full RSV dataset, individual keyword × age time series, Prais-Winsten sensitivity, Fourier sensitivity
+| Table S1 | Platform migration sensitivity — β₃ under 3/5/7% annual young-user attrition | Robustness |
+
+Supplementary: full RSV dataset, individual keyword × age time series, Prais-Winsten sensitivity, Fourier sensitivity, platform migration sensitivity, monthly joinpoint
 
 ---
 
@@ -282,11 +284,11 @@ lifting-age-shift/
 │   ├── 01_collect_naver.py
 │   ├── 02_collect_gt.py
 │   ├── 03_process.py
-│   ├── 04_approach_a.py
+│   ├── 04_approach_a.py              # + DW/LB diagnostics, Prais-Winsten, Fourier
+│   ├── 04c_sensitivity_platform.py   # Platform migration sensitivity (3/5/7%)
 │   ├── 05_approach_b.py
-│   ├── 06_joinpoint.py
-│   ├── 07_gender.py
-│   └── 08_figures.py
+│   ├── 06_joinpoint.py               # + monthly-level sensitivity
+│   └── 07_figures.py
 ├── output/
 │   ├── figures/
 │   └── tables/
