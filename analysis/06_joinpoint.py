@@ -128,6 +128,75 @@ def run_monthly_joinpoint(monthly_ytr):
     return results, monthly_ytr
 
 
+def bootstrap_joinpoint_ci(ytr_all, n_bootstrap=2000, seed=42):
+    """Bootstrap confidence intervals for joinpoint locations."""
+    rng = np.random.default_rng(seed)
+    years = ytr_all["year"].values
+    ytr_vals = ytr_all["YTR"].values
+    n = len(years)
+
+    boot_jp1 = []
+    boot_jp2 = []
+    boot_n_jp = []
+
+    for _ in range(n_bootstrap):
+        # Resample residuals (parametric bootstrap)
+        best_model = min(
+            [{"jp": [], "m": fit_segmented(years, ytr_vals, [])}] +
+            [{"jp": [jp], "m": fit_segmented(years, ytr_vals, [jp])}
+             for jp in range(2017, 2025)] +
+            [{"jp": [jp1, jp2], "m": fit_segmented(years, ytr_vals, [jp1, jp2])}
+             for jp1, jp2 in combinations(range(2017, 2025), 2) if jp2 - jp1 >= 2],
+            key=lambda x: x["m"].bic
+        )
+        residuals = ytr_vals - best_model["m"].fittedvalues
+        boot_resid = rng.choice(residuals, size=n, replace=True)
+        boot_y = best_model["m"].fittedvalues + boot_resid
+
+        # Fit best model on bootstrap sample
+        candidates = list(range(2017, 2025))
+        best_boot = {"bic": np.inf, "jp": [], "n_jp": 0}
+
+        m0 = fit_segmented(years, boot_y, [])
+        if m0.bic < best_boot["bic"]:
+            best_boot = {"bic": m0.bic, "jp": [], "n_jp": 0}
+
+        for jp in candidates:
+            m = fit_segmented(years, boot_y, [jp])
+            if m.bic < best_boot["bic"]:
+                best_boot = {"bic": m.bic, "jp": [jp], "n_jp": 1}
+
+        for jp1, jp2 in combinations(candidates, 2):
+            if jp2 - jp1 < 2:
+                continue
+            m = fit_segmented(years, boot_y, [jp1, jp2])
+            if m.bic < best_boot["bic"]:
+                best_boot = {"bic": m.bic, "jp": [jp1, jp2], "n_jp": 2}
+
+        boot_n_jp.append(best_boot["n_jp"])
+        if best_boot["n_jp"] >= 1:
+            boot_jp1.append(best_boot["jp"][0])
+        if best_boot["n_jp"] >= 2:
+            boot_jp2.append(best_boot["jp"][1])
+
+    results = {
+        "n_bootstrap": n_bootstrap,
+        "pct_0jp": sum(1 for x in boot_n_jp if x == 0) / n_bootstrap * 100,
+        "pct_1jp": sum(1 for x in boot_n_jp if x == 1) / n_bootstrap * 100,
+        "pct_2jp": sum(1 for x in boot_n_jp if x == 2) / n_bootstrap * 100,
+    }
+    if boot_jp1:
+        results["jp1_median"] = np.median(boot_jp1)
+        results["jp1_ci_lower"] = np.percentile(boot_jp1, 2.5)
+        results["jp1_ci_upper"] = np.percentile(boot_jp1, 97.5)
+    if boot_jp2:
+        results["jp2_median"] = np.median(boot_jp2)
+        results["jp2_ci_lower"] = np.percentile(boot_jp2, 2.5)
+        results["jp2_ci_upper"] = np.percentile(boot_jp2, 97.5)
+
+    return results
+
+
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
 
@@ -202,6 +271,28 @@ def main():
     monthly_ytr["ytr_predicted"] = best_monthly["model"].fittedvalues
     monthly_pred_path = os.path.join(OUT_DIR, "joinpoint_monthly_predicted.csv")
     monthly_ytr.to_csv(monthly_pred_path, index=False, encoding="utf-8-sig")
+
+    # ── Bootstrap CI for joinpoints ──
+    print("\n" + "=" * 60)
+    print("BOOTSTRAP CONFIDENCE INTERVALS FOR JOINPOINTS (n=2000)")
+    print("=" * 60)
+
+    boot_results = bootstrap_joinpoint_ci(ytr_all, n_bootstrap=2000)
+    print(f"  Model selection frequency:")
+    print(f"    0 joinpoints: {boot_results['pct_0jp']:.1f}%")
+    print(f"    1 joinpoint:  {boot_results['pct_1jp']:.1f}%")
+    print(f"    2 joinpoints: {boot_results['pct_2jp']:.1f}%")
+    if "jp1_median" in boot_results:
+        print(f"  Joinpoint 1: median={boot_results['jp1_median']:.0f}, "
+              f"95% CI [{boot_results['jp1_ci_lower']:.0f}, {boot_results['jp1_ci_upper']:.0f}]")
+    if "jp2_median" in boot_results:
+        print(f"  Joinpoint 2: median={boot_results['jp2_median']:.0f}, "
+              f"95% CI [{boot_results['jp2_ci_lower']:.0f}, {boot_results['jp2_ci_upper']:.0f}]")
+
+    boot_df = pd.DataFrame([boot_results])
+    boot_path = os.path.join(OUT_DIR, "joinpoint_bootstrap_ci.csv")
+    boot_df.to_csv(boot_path, index=False, encoding="utf-8-sig")
+    print(f"\nSaved: {boot_path}")
 
     # ── Concordance check ──
     print("\n" + "=" * 60)

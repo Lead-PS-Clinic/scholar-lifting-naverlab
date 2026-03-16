@@ -101,6 +101,45 @@ def main():
     ytr_pivot.to_csv(out3, index=False, encoding="utf-8-sig")
     print(f"Saved ytr_timeseries.csv: {ytr_pivot.shape}")
 
+    # ── Step 5: Data completeness audit ──
+    # Expected: each keyword × age_code × gender should have 120 monthly observations
+    df_age_audit = df[df["age_code"] != "all"].copy()
+    df_age_audit["age_code"] = df_age_audit["age_code"].astype(str)
+    completeness = (
+        df_age_audit.groupby(["keyword", "age_code", "gender"])
+        .agg(
+            n_obs=("ratio", "count"),
+            n_nonzero=("ratio", lambda x: (x > 0).sum()),
+            n_missing=("ratio", lambda x: x.isna().sum()),
+        )
+        .reset_index()
+    )
+    completeness["expected"] = 120
+    completeness["completeness_pct"] = (completeness["n_obs"] / 120 * 100).round(1)
+    completeness["nonzero_pct"] = (completeness["n_nonzero"] / completeness["n_obs"] * 100).round(1)
+
+    out_completeness = os.path.join(OUT_DIR, "data_completeness_audit.csv")
+    completeness.to_csv(out_completeness, index=False, encoding="utf-8-sig")
+    print(f"\nSaved data_completeness_audit.csv: {completeness.shape}")
+
+    # Summary by keyword
+    kw_summary = completeness.groupby("keyword").agg(
+        total_expected=("expected", "sum"),
+        total_observed=("n_obs", "sum"),
+        total_nonzero=("n_nonzero", "sum"),
+    ).reset_index()
+    kw_summary["completeness_pct"] = (kw_summary["total_observed"] / kw_summary["total_expected"] * 100).round(1)
+    kw_summary["nonzero_pct"] = (kw_summary["total_nonzero"] / kw_summary["total_observed"] * 100).round(1)
+
+    out_kw_completeness = os.path.join(OUT_DIR, "data_completeness_by_keyword.csv")
+    kw_summary.to_csv(out_kw_completeness, index=False, encoding="utf-8-sig")
+    print(f"Saved data_completeness_by_keyword.csv")
+
+    print("\n── Data Completeness by Keyword ──")
+    for _, row in kw_summary.iterrows():
+        print(f"  {row['keyword']:12s}: {row['total_observed']}/{row['total_expected']} obs "
+              f"({row['completeness_pct']}%), {row['nonzero_pct']}% nonzero")
+
     # Summary
     print("\n── Summary ──")
     print(f"Keywords: {sorted(rsv_grouped['keyword'].unique())}")

@@ -55,10 +55,30 @@ def main():
     if df is None:
         print("Failed to collect GT data. Generating simulation.", file=sys.stderr)
         df = simulate_gt()
+        source = "simulated"
+    else:
+        source = "pytrends"
 
     os.makedirs(os.path.dirname(os.path.abspath(OUTPUT_PATH)), exist_ok=True)
     df.to_csv(OUTPUT_PATH, encoding="utf-8-sig")
+
+    # Save collection metadata
+    import json
+    from datetime import datetime
+    meta_path = os.path.join(os.path.dirname(os.path.abspath(OUTPUT_PATH)),
+                             "gt_global_metadata.json")
+    meta = {
+        "source": source,
+        "collected_at": datetime.now().isoformat(),
+        "geo": GEO,
+        "timeframe": TIMEFRAME,
+        "keywords": KEYWORDS,
+        "note": "simulated" if source == "simulated" else "real pytrends data",
+    }
+    with open(meta_path, "w", encoding="utf-8") as f:
+        json.dump(meta, f, ensure_ascii=False, indent=2)
     print(f"\nSaved to {OUTPUT_PATH}")
+    print(f"Metadata saved to {meta_path}")
     print(f"Shape: {df.shape}")
     print(f"Period: {df.index.min()} ~ {df.index.max()}")
     print(f"\nTail:")
